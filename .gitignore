@@ -1,0 +1,15 @@
+# ── Everything is private by default … ──
+/*
+!/.gitignore
+
+# ── … except the public poster site ──
+!/poster/
+!/README.md
+
+# ── and even inside poster/, keep internal notes out ──
+poster/Poster_Content_Master_Plan_v2_INTERNAL.md
+
+# ── OS / editor noise ──
+desktop.ini
+Thumbs.db
+~$*
