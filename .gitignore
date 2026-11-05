@@ -4,6 +4,7 @@
 
 # ── … except the public poster site ──
 !/poster/
+!/index.html
 !/README.md
 
 # ── and even inside poster/, keep internal notes out ──
