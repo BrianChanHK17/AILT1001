@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devaluing Human Intellect? — AILT1001 Poster Demo v0.7 (enhanced background)</title>
+<style>
+  :root{
+    --bg1:#0B1E4B; --bg2:#173A85; --bg3:#0F2B66;
+    --card:rgba(255,255,255,.055); --card2:rgba(255,255,255,.09);
+    --line:rgba(160,190,255,.22); --line-soft:rgba(160,190,255,.13);
+    --ink:#EDF3FF; --muted:#AFC3EE; --faint:#8FA6D9;
+    --cyan:#5AC8FF; --amber:#FFC857; --green:#6FE08C; --red:#FF8078; --violet:#B79CFF;
+    --serif:"Georgia","Times New Roman",serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    background:#02060f;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+    font-family:"Inter","Segoe UI",Arial,Helvetica,sans-serif;
+  }
+  .stage{transform-origin:center center;}
+
+  /* ====== POSTER CANVAS (A0 portrait 841:1189 => 1682 x 2378) ====== */
+  .poster{
+    position:relative;
+    width:1682px;height:2378px;
+    background:
+      radial-gradient(1200px 800px at 85% -5%, rgba(90,140,255,.20), transparent 60%),
+      radial-gradient(1000px 700px at -10% 30%, rgba(70,110,230,.16), transparent 55%),
+      radial-gradient(1100px 900px at 50% 108%, rgba(40,80,190,.22), transparent 60%),
+      linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 48%, var(--bg3) 100%);
+    color:var(--ink);
+    overflow:hidden;
+    border:1px solid rgba(120,160,255,.15);
+  }
+
+  /* ====== BACKGROUND MATH EQUATIONS (decorative, low opacity) ====== */
+  .eq{position:absolute;white-space:nowrap;font-family:var(--serif);font-style:italic;color:#CBDCFF;pointer-events:none;text-shadow:0 0 20px rgba(90,140,255,.45);}
+  .eq.tl{transform:rotate(-8deg)} .eq.tr{transform:rotate(6deg)}
+  .eq.br{transform:rotate(-5deg)} .eq.bl{transform:rotate(9deg)}
+
+  /* ====== COLORFUL DECORATIONS (margins · gutters · header) ====== */
+  .sym{position:absolute;z-index:1;line-height:1;pointer-events:none;font-family:var(--serif);font-weight:700;filter:drop-shadow(0 0 12px rgba(110,190,255,.35));}
+  .deco{position:absolute;z-index:1;pointer-events:none;filter:drop-shadow(0 0 14px rgba(110,190,255,.3));}
+
+  /* ====== LAYOUT ====== */
+  .inner{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:36px 56px 32px;}
+  header{display:flex;align-items:center;gap:26px;}
+  .head-left{flex:1;}
+  h1{font-size:60px;line-height:1.06;letter-spacing:-.5px;font-weight:800;}
+  h1 .q{color:var(--cyan);}
+  .subtitle{margin-top:10px;font-size:27px;font-weight:600;color:#DCE7FF;}
+  .subtitle .neq{color:var(--amber);}
+  .keymsg{margin-top:8px;font-size:20px;line-height:1.36;color:var(--muted);max-width:1080px;}
+  .keymsg b{color:#E8F0FF;}
+  .head-right{display:flex;flex-direction:column;align-items:flex-end;gap:16px;flex:0 0 auto;}
+  .corner-qr{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--muted);font-size:13px;text-align:center;}
+  .corner-qr svg{display:block;opacity:.95;}
+  .corner-qr b{color:var(--cyan);font-weight:600;}
+  .g{font-size:19px;line-height:1.45;color:#D7E3FF;text-align:right;}
+  .g small{display:block;color:var(--faint);font-size:16px;margin-top:4px;}
+
+  main{flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:20px;min-height:0;}
+  .col{display:flex;flex-direction:column;gap:16px;min-height:0;}
+  .colmid{border-left:1px solid var(--line-soft);border-right:1px solid var(--line-soft);padding:0 24px;}
+
+  .colhead{display:flex;align-items:center;gap:13px;}
+  .colhead .num{width:46px;height:46px;flex:0 0 46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#04122e;background:linear-gradient(135deg,var(--cyan),#8FD9FF);}
+  .colhead h2{font-size:28px;font-weight:800;letter-spacing:-.3px;}
+  .colhead .sub{display:block;font-size:16.5px;font-weight:500;color:var(--muted);margin-top:1px;}
+
+  .card{background:var(--card);border:1px solid var(--line-soft);border-radius:16px;padding:13px 18px;display:flex;flex-direction:column;}
+  .imgslot{flex:1;min-height:260px;margin-top:12px;border:1.5px dashed var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.03);}
+  .imgslot-hint{color:var(--faint);font-size:15.5px;font-style:italic;text-align:center;padding:0 26px;line-height:1.45;}
+  .imgslot img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;}
+  .fig{flex:1;min-height:0;display:flex;flex-direction:column;gap:6px;margin:12px 0 0;}
+  .fig img{flex:1 1 0;height:0;min-height:0;width:100%;object-fit:contain;border-radius:12px;}
+  .fig figcaption{font-size:14.5px;color:var(--faint);text-align:center;font-style:italic;}
+
+  /* Column-2 only: compact to make room for the arguing illustration */
+  main > .col:nth-child(2) .card{padding:10px 16px;}
+  main > .col:nth-child(2) .board th,.col:nth-child(2) .board td{padding:6px 8px;font-size:16px;}
+  main > .col:nth-child(2) .cellsub{font-size:12.5px;line-height:1.22;}
+  main > .col:nth-child(2) .punch{font-size:16.5px;line-height:1.32;}
+  main > .col:nth-child(2) .qcard{padding:7px 11px;}
+  main > .col:nth-child(2) .qcard .qq{font-size:15.5px;}
+  main > .col:nth-child(2) .q3{gap:7px;}
+  main > .col:nth-child(2) .q3 .item p{font-size:16.5px;line-height:1.32;}
+  .fig.argue{flex:0 0 auto;margin:10px 0 2px;}
+  .fig.argue img{flex:0 0 auto;height:auto;max-height:196px;}
+
+  /* Column-1 only: slightly larger timeline text to balance column height */
+  main > .col:first-child .titem p{font-size:18.5px;}
+  main > .col:first-child .titem{padding-bottom:10px;}
+  .card h3{font-size:21px;color:var(--cyan);margin-bottom:7px;letter-spacing:.2px;}
+  .card h3 .tag{color:var(--muted);font-weight:600;font-size:16px;}
+
+  ul.points{list-style:none;display:flex;flex-direction:column;gap:9px;}
+  ul.points li{font-size:19px;line-height:1.4;color:#E6EEFF;padding-left:20px;position:relative;}
+  ul.points li::before{content:"▸";position:absolute;left:0;top:-1px;color:var(--cyan);font-size:17px;}
+  ul.points li b{color:#FFFFFF;}
+  .cite{color:var(--faint);font-size:14px;white-space:nowrap;}
+
+  /* ---- Timeline ---- */
+  .timeline{position:relative;margin:4px 4px 0 6px;padding-left:26px;}
+  .timeline::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:3px;background:linear-gradient(var(--cyan),var(--violet));border-radius:2px;opacity:.85;}
+  .titem{position:relative;padding:0 0 7px 4px;}
+  .titem:last-child{padding-bottom:2px;}
+  .titem::before{content:"";position:absolute;left:-26px;top:6px;width:13px;height:13px;border-radius:50%;background:var(--bg1);border:3px solid var(--cyan);}
+  .titem.hot::before{border-color:var(--amber);background:var(--amber);box-shadow:0 0 12px rgba(255,200,87,.6);}
+  .titem .yr{font-size:16px;font-weight:800;color:var(--cyan);letter-spacing:.5px;}
+  .titem.hot .yr{color:var(--amber);}
+  .titem p{font-size:18px;line-height:1.32;color:#E6EEFF;margin-top:1px;}
+  .sowhat{margin-top:6px;font-size:17.5px;color:var(--amber);font-style:italic;font-family:var(--serif);}
+
+  /* ---- Stat chips ---- */
+  .chips{display:flex;gap:10px;margin-top:8px;}
+  .chip{flex:1;text-align:center;border-radius:12px;padding:7px 6px;background:var(--card2);border:1px solid var(--line);}
+  .chip .big{font-size:24px;font-weight:800;color:var(--cyan);}
+  .chip .lbl{font-size:13.5px;color:var(--muted);margin-top:1px;line-height:1.22;}
+  .chip.gold .big{color:var(--amber);}
+
+  /* ---- SVG diagrams ---- */
+  .flow,.balance{width:100%;height:auto;display:block;margin-top:10px;}
+
+  /* ---- Status board ---- */
+  .board{border-collapse:separate;border-spacing:0;width:100%;border-radius:12px;overflow:hidden;}
+  .board th,.board td{padding:8px 9px;text-align:center;font-size:17px;border-bottom:1px solid var(--line-soft);}
+  .board th{background:rgba(90,150,255,.14);font-size:17.5px;color:#EAF2FF;}
+  .board td:first-child,.board th:first-child{text-align:left;padding-left:13px;width:186px;}
+  .board tr:last-child td{border-bottom:none;}
+  .yes{color:var(--green);font-weight:800;font-size:21px;}
+  .no{color:var(--red);font-weight:800;font-size:21px;}
+  .cellsub{display:block;font-size:13px;color:var(--muted);font-weight:400;margin-top:2px;line-height:1.26;}
+  .caselabel{font-weight:800;color:#fff;font-size:16.5px;}
+  .caselabel small{display:block;font-weight:500;color:var(--muted);font-size:13px;margin-top:2px;}
+  .punch{margin-top:6px;font-size:17.5px;line-height:1.36;color:#E6EEFF;}
+  .punch b{color:var(--amber);}
+
+  /* ---- Quote cards ---- */
+  .quotes{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+  .qcard{background:rgba(255,255,255,.07);border:1px solid var(--line-soft);border-radius:12px;padding:8px 12px;position:relative;}
+  .qcard.wide{grid-column:1 / -1;}
+  .qcard .qq{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.28;color:#F2F6FF;}
+  .qcard .qa{margin-top:4px;font-size:13.5px;color:var(--cyan);font-weight:700;}
+  .qcard .qa span{color:var(--faint);font-weight:400;}
+  .qcard .warn{color:var(--amber);font-weight:600;font-size:12.5px;}
+  .qcard::before{content:"\201C";position:absolute;top:0;right:10px;font-size:44px;font-family:var(--serif);color:rgba(140,180,255,.25);}
+
+  /* ---- Three questions ---- */
+  .q3{display:flex;flex-direction:column;gap:9px;}
+  .q3 .item{display:flex;gap:12px;align-items:flex-start;}
+  .q3 .n{flex:0 0 38px;width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(255,200,87,.15);border:1px solid rgba(255,200,87,.5);color:var(--amber);font-weight:800;font-size:19px;}
+  .q3 .item h4{font-size:18.5px;color:#fff;margin-bottom:2px;}
+  .q3 .item p{font-size:17.5px;line-height:1.38;color:#DEE9FF;}
+
+  /* ---- Guardrail strip ---- */
+  .guard{border:1.5px solid rgba(255,200,87,.65);background:rgba(255,200,87,.08);border-radius:12px;padding:9px 13px;font-size:16px;line-height:1.35;color:#FFF3D6;margin-top:9px;}
+  .guard b{color:var(--amber);}
+
+  /* ---- Takeaway ---- */
+  .takeaway .lead{font-family:var(--serif);font-style:italic;font-size:20px;color:#fff;line-height:1.33;margin-bottom:8px;}
+
+  /* ---- Glossary ---- */
+  /* ---- header corner QR ---- */
+
+  .footnote{margin-top:16px;display:flex;justify-content:space-between;align-items:center;color:var(--faint);font-size:14.5px;border-top:1px solid var(--line-soft);padding-top:11px;}
+  .footnote .demo{color:var(--amber);}
+
+  /* ====== PRINT / PDF EXPORT (A0 portrait) ====== */
+  @page{size:841mm 1189mm;margin:0;}
+  @media print{
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+    html,body{height:auto;overflow:visible;display:block;background:#fff;}
+    .stage{transform:none !important;}
+    .poster{zoom:1.8898;}  /* 1682×2378 px → 841×1189 mm at 96dpi */
+    .footnote .demo{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+<div class="poster" id="poster">
+
+  <!-- ======== decorative background equations (evenly re-placed; AABB-verified no overlaps) ======== -->
+  <div class="eq tl" style="top:114px;left:63px;font-size:36px;opacity:.10">∂V/∂t + ½σ²S² ∂²V/∂S² + rS ∂V/∂S − rV = 0</div>
+  <div class="eq tl" style="top:106px;left:908px;font-size:50px;opacity:.115">∂u/∂t + (u·∇)u = −∇p + ν∇²u + f</div>
+  <div class="eq tr" style="top:413px;left:160px;font-size:42px;opacity:.11">theorem ns_blowup : ∃ T &lt; ∞, … ∎</div>
+  <div class="eq tr" style="top:413px;left:929px;font-size:42px;opacity:.115">3-SAT ∈ O(2<sup>δn</sup>)&nbsp;&nbsp;⇒&nbsp;&nbsp;ETH is false</div>
+  <div class="eq bl" style="top:718px;left:93px;font-size:36px;opacity:.11">f(x) = 1/(σ√2π) e<sup>−(x−μ)²/2σ²</sup></div>
+  <div class="eq bl" style="top:717px;left:659px;font-size:38px;opacity:.10">∇×B = μ₀J + μ₀ε₀ ∂E/∂t</div>
+  <div class="eq br" style="top:719px;left:1183px;font-size:34px;opacity:.10">P(A|B) = P(B|A)P(A)/P(B)</div>
+  <div class="eq tl" style="top:1031px;left:29px;font-size:36px;opacity:.11">log(ab) = log a + log b</div>
+  <div class="eq bl" style="top:1032px;left:477px;font-size:34px;opacity:.10">F(n) = F(n−1) + F(n−2)</div>
+  <div class="eq br" style="top:1031px;left:919px;font-size:36px;opacity:.11">P(d) = log₁₀(1 + 1/d)</div>
+  <div class="eq bl" style="top:1029px;left:1350px;font-size:38px;opacity:.10">lim<sub>t→T</sub> ‖u(t)‖<sub>∞</sub> = ∞</div>
+  <div class="eq tr" style="top:1329px;left:26px;font-size:34px;opacity:.10">dV = μV dt + σV dW</div>
+  <div class="eq tl" style="top:1327px;left:382px;font-size:38px;opacity:.09">‖Pf′(u)‖ ≤ C‖u‖<sub>L²</sub><sup>α</sup></div>
+  <div class="eq tr" style="top:1329px;left:728px;font-size:34px;opacity:.10">P(X=k) = λ<sup>k</sup>e<sup>−λ</sup>/k!</div>
+  <div class="eq br" style="top:1329px;left:1055px;font-size:34px;opacity:.09">supply ⇄ demand</div>
+  <div class="eq tr" style="top:1325px;left:1380px;font-size:42px;opacity:.11">iℏ ∂ψ/∂t = Ĥψ</div>
+  <div class="eq bl" style="top:1638px;left:27px;font-size:34px;opacity:.10">H = −Σ p<sub>i</sub> log₂ p<sub>i</sub></div>
+  <div class="eq tl" style="top:1636px;left:386px;font-size:38px;opacity:.10">∫ e<sup>−x²</sup> dx = √π</div>
+  <div class="eq bl" style="top:1638px;left:737px;font-size:34px;opacity:.10">A = P(1 + r/n)<sup>nt</sup></div>
+  <div class="eq br" style="top:1637px;left:1081px;font-size:36px;opacity:.10">det(A − λI) = 0</div>
+  <div class="eq tr" style="top:1638px;left:1421px;font-size:34px;opacity:.10">σ² = E[(X−μ)²]</div>
+  <div class="eq bl" style="top:1944px;left:28px;font-size:38px;opacity:.10">ζ(s) = Σ 1/n<sup>s</sup></div>
+  <div class="eq tr" style="top:1946px;left:288px;font-size:36px;opacity:.10">Δx Δp ≥ ℏ/2</div>
+  <div class="eq tr" style="top:1946px;left:531px;font-size:36px;opacity:.10">Re(s) = ½ ?</div>
+  <div class="eq br" style="top:1946px;left:779px;font-size:36px;opacity:.09">S = k<sub>B</sub> ln W</div>
+  <div class="eq tr" style="top:1943px;left:1014px;font-size:40px;opacity:.11">e<sup>iπ</sup> + 1 = 0</div>
+  <div class="eq tl" style="top:1947px;left:1248px;font-size:34px;opacity:.09">a² + b² = c²</div>
+  <div class="eq bl" style="top:1944px;left:1489px;font-size:38px;opacity:.10">PV = nRT</div>
+  <div class="eq br" style="top:2252px;left:266px;font-size:34px;opacity:.09">λ₁ + ⋯ + λₖ</div>
+  <div class="eq tl" style="top:2248px;left:559px;font-size:40px;opacity:.11">E = mc²</div>
+  <div class="eq tl" style="top:2250px;left:826px;font-size:36px;opacity:.10">P&nbsp;≟&nbsp;NP</div>
+  <div class="eq br" style="top:2250px;left:1064px;font-size:36px;opacity:.10">∇·u = 0</div>
+  <div class="eq tr" style="top:2252px;left:1307px;font-size:34px;opacity:.09">ln e = 1</div>
+
+  <!-- ======== colorful margin decorations (symbols · calculator · brain–circuit) ======== -->
+  <!-- left margin -->
+  <div class="sym" style="top:340px;left:8px;font-size:58px;color:#FFC857;opacity:.65;transform:rotate(-10deg)">π</div>
+  <div class="sym" style="top:790px;left:16px;font-size:62px;color:#5AC8FF;opacity:.6;transform:rotate(8deg)">∫</div>
+  <div class="sym" style="top:1230px;left:12px;font-size:54px;color:#B79CFF;opacity:.6;transform:rotate(-7deg)">Σ</div>
+  <div class="sym" style="top:1640px;left:10px;font-size:56px;color:#6FE08C;opacity:.6;transform:rotate(9deg)">√</div>
+  <div class="sym" style="top:2010px;left:14px;font-size:50px;color:#FF8078;opacity:.55;transform:rotate(-8deg)">∂</div>
+  <div class="sym" style="top:2270px;left:8px;font-size:50px;color:#5AC8FF;opacity:.6;transform:rotate(6deg)">∞</div>
+  <!-- right margin -->
+  <div class="sym" style="top:520px;right:12px;font-size:54px;color:#5AC8FF;opacity:.6;transform:rotate(9deg)">θ</div>
+  <div class="sym" style="top:930px;right:10px;font-size:52px;color:#FFC857;opacity:.6;transform:rotate(-8deg)">Ω</div>
+  <div class="sym" style="top:1350px;right:12px;font-size:54px;color:#6FE08C;opacity:.6;transform:rotate(-6deg)">≠</div>
+  <div class="sym" style="top:1750px;right:12px;font-size:54px;color:#B79CFF;opacity:.6;transform:rotate(8deg)">∇</div>
+  <div class="sym" style="top:2110px;right:12px;font-size:48px;color:#FF8078;opacity:.55;transform:rotate(-9deg)">%</div>
+  <div class="sym" style="top:2300px;right:10px;font-size:52px;color:#5AC8FF;opacity:.6;transform:rotate(7deg)">Δ</div>
+  <!-- column gutters -->
+  <div class="sym" style="top:600px;left:568px;font-size:44px;color:#FFC857;opacity:.5;transform:rotate(-6deg)">∫</div>
+  <div class="sym" style="top:800px;left:1100px;font-size:42px;color:#B79CFF;opacity:.5;transform:rotate(7deg)">≈</div>
+  <div class="sym" style="top:1150px;left:568px;font-size:44px;color:#6FE08C;opacity:.5;transform:rotate(6deg)">∴</div>
+  <div class="sym" style="top:1500px;left:1104px;font-size:40px;color:#FF8078;opacity:.45;transform:rotate(-7deg)">≡</div>
+  <div class="sym" style="top:1880px;left:568px;font-size:44px;color:#5AC8FF;opacity:.5;transform:rotate(8deg)">Δ</div>
+  <div class="sym" style="top:2080px;left:1102px;font-size:44px;color:#FFC857;opacity:.5;transform:rotate(-6deg)">λ</div>
+  <!-- top band -->
+  <div class="sym" style="top:6px;left:150px;font-size:30px;color:#FFC857;opacity:.55;transform:rotate(-8deg)">√</div>
+  <div class="sym" style="top:8px;left:420px;font-size:30px;color:#5AC8FF;opacity:.5;transform:rotate(6deg)">π</div>
+  <div class="sym" style="top:6px;left:760px;font-size:30px;color:#6FE08C;opacity:.5;transform:rotate(-5deg)">Σ</div>
+  <div class="sym" style="top:8px;left:980px;font-size:30px;color:#B79CFF;opacity:.5;transform:rotate(7deg)">∞</div>
+  <div class="sym" style="top:6px;left:1120px;font-size:30px;color:#FF8078;opacity:.45;transform:rotate(-7deg)">∂</div>
+  <!-- bottom band -->
+  <div class="sym" style="top:2346px;left:200px;font-size:26px;color:#6FE08C;opacity:.5;transform:rotate(-6deg)">α</div>
+  <div class="sym" style="top:2348px;left:480px;font-size:26px;color:#5AC8FF;opacity:.5;transform:rotate(6deg)">β</div>
+  <div class="sym" style="top:2346px;left:760px;font-size:26px;color:#FFC857;opacity:.5;transform:rotate(-5deg)">γ</div>
+  <div class="sym" style="top:2348px;left:1040px;font-size:26px;color:#B79CFF;opacity:.5;transform:rotate(7deg)">δ</div>
+  <div class="sym" style="top:2346px;left:1320px;font-size:26px;color:#FF8078;opacity:.45;transform:rotate(-6deg)">ε</div>
+
+  <!-- calculator (header free zone) -->
+  <svg class="deco" style="left:1130px;top:60px;transform:rotate(7deg)" width="110" height="148" viewBox="0 0 110 148" role="img" aria-label="calculator">
+    <rect x="2" y="2" width="106" height="144" rx="14" fill="#123066" stroke="#5AC8FF" stroke-width="3"/>
+    <rect x="12" y="12" width="86" height="32" rx="6" fill="#0B1E4B" stroke="#8FB4FF" stroke-width="2"/>
+    <text x="90" y="35" font-size="19" fill="#6FE08C" text-anchor="end" font-family="Consolas,monospace">3.14</text>
+    <g>
+      <rect x="12" y="54" width="19" height="16" rx="4" fill="#5AC8FF"/><rect x="34" y="54" width="19" height="16" rx="4" fill="#FFC857"/><rect x="56" y="54" width="19" height="16" rx="4" fill="#5AC8FF"/><rect x="78" y="54" width="20" height="16" rx="4" fill="#FF8078"/>
+      <rect x="12" y="76" width="19" height="16" rx="4" fill="#FFC857"/><rect x="34" y="76" width="19" height="16" rx="4" fill="#5AC8FF"/><rect x="56" y="76" width="19" height="16" rx="4" fill="#B79CFF"/><rect x="78" y="76" width="20" height="16" rx="4" fill="#FF8078"/>
+      <rect x="12" y="98" width="19" height="16" rx="4" fill="#5AC8FF"/><rect x="34" y="98" width="19" height="16" rx="4" fill="#B79CFF"/><rect x="56" y="98" width="19" height="16" rx="4" fill="#FFC857"/><rect x="78" y="98" width="20" height="16" rx="4" fill="#FF8078"/>
+      <rect x="12" y="120" width="40" height="16" rx="4" fill="#6FE08C"/><rect x="56" y="120" width="19" height="16" rx="4" fill="#5AC8FF"/><rect x="78" y="120" width="20" height="22" rx="4" fill="#FFC857"/>
+    </g>
+  </svg>
+
+  <!-- human ↔ AI : organic brain half + circuit half (header free zone) -->
+  <svg class="deco" style="left:1262px;top:70px;transform:rotate(-6deg)" width="118" height="96" viewBox="0 0 118 96" role="img" aria-label="half brain, half circuit — human and machine intelligence">
+    <path d="M58 12 C40 2, 18 8, 14 26 C2 32, 2 50, 10 58 C6 74, 20 88, 36 84 C44 94, 58 92, 58 82 Z" fill="rgba(255,128,120,.12)" stroke="#FF8078" stroke-width="3"/>
+    <g stroke="#FF8078" stroke-width="2.5" fill="none" stroke-linecap="round">
+      <path d="M30 30 q10 6 4 16"/><path d="M22 52 q12 -2 16 8"/><path d="M40 44 q-8 4 -6 14"/>
+    </g>
+    <path d="M60 12 C78 2, 100 8, 104 26 C116 32, 116 50, 108 58 C112 74, 98 88, 82 84 C74 94, 60 92, 60 82 Z" fill="rgba(90,200,255,.10)" stroke="#5AC8FF" stroke-width="3"/>
+    <g stroke="#6FE08C" stroke-width="2.5" fill="none" stroke-linecap="round">
+      <path d="M70 28 h12 v10 h10"/><path d="M70 48 h16"/><path d="M86 62 h12 v-8"/>
+    </g>
+    <g fill="#FFC857"><circle cx="94" cy="38" r="3"/><circle cx="88" cy="48" r="3"/><circle cx="100" cy="54" r="3"/></g>
+  </svg>
+
+  <!-- ======== thematic pictograms (margins, between sections) ======== -->
+  <!-- robot — left margin -->
+  <svg class="deco" style="left:5px;top:560px;transform:rotate(-7deg)" width="48" height="58" viewBox="0 0 48 58" role="img" aria-label="robot">
+    <line x1="24" y1="3" x2="24" y2="11" stroke="#B79CFF" stroke-width="3"/>
+    <circle cx="24" cy="4" r="3.5" fill="#B79CFF"/>
+    <rect x="4" y="11" width="40" height="34" rx="8" fill="rgba(183,156,255,.15)" stroke="#B79CFF" stroke-width="3"/>
+    <circle cx="16" cy="27" r="4.5" fill="#5AC8FF"/>
+    <circle cx="32" cy="27" r="4.5" fill="#5AC8FF"/>
+    <rect x="14" y="37" width="20" height="4" rx="2" fill="#6FE08C"/>
+    <line x1="4" y1="27" x2="0" y2="27" stroke="#B79CFF" stroke-width="3"/>
+    <line x1="44" y1="27" x2="48" y2="27" stroke="#B79CFF" stroke-width="3"/>
+  </svg>
+  <!-- computer — right margin -->
+  <svg class="deco" style="right:4px;top:640px;transform:rotate(7deg)" width="52" height="46" viewBox="0 0 52 46" role="img" aria-label="computer">
+    <rect x="6" y="3" width="40" height="27" rx="4" fill="rgba(255,200,87,.15)" stroke="#FFC857" stroke-width="3"/>
+    <rect x="11" y="8" width="30" height="17" rx="2" fill="#0B1E4B"/>
+    <text x="26" y="20" font-size="9" fill="#6FE08C" text-anchor="middle" font-family="Consolas,monospace">∀x ∃y</text>
+    <path d="M2 38 h48 l-5 7 H7 Z" fill="rgba(255,200,87,.25)" stroke="#FFC857" stroke-width="2.5"/>
+  </svg>
+  <!-- professor — left margin -->
+  <svg class="deco" style="left:4px;top:1345px;transform:rotate(-8deg)" width="54" height="50" viewBox="0 0 54 50" role="img" aria-label="professor with mortarboard">
+    <path d="M27 4 L52 14 L27 24 L2 14 Z" fill="rgba(90,200,255,.2)" stroke="#5AC8FF" stroke-width="3"/>
+    <path d="M42 19 v11" stroke="#5AC8FF" stroke-width="2.5"/>
+    <circle cx="42" cy="32" r="2.5" fill="#FFC857"/>
+    <circle cx="27" cy="34" r="9" fill="rgba(255,128,120,.18)" stroke="#FF8078" stroke-width="3"/>
+  </svg>
+  <!-- book stack — right margin -->
+  <svg class="deco" style="right:5px;top:1490px;transform:rotate(-6deg)" width="48" height="44" viewBox="0 0 48 44" role="img" aria-label="stack of books">
+    <rect x="4" y="28" width="40" height="10" rx="3" fill="rgba(111,224,140,.18)" stroke="#6FE08C" stroke-width="2.5"/>
+    <rect x="8" y="16" width="32" height="10" rx="3" fill="rgba(90,200,255,.18)" stroke="#5AC8FF" stroke-width="2.5"/>
+    <rect x="6" y="4" width="36" height="10" rx="3" fill="rgba(255,128,120,.18)" stroke="#FF8078" stroke-width="2.5"/>
+  </svg>
+
+  <div class="inner">
+
+    <!-- ================= HEADER ================= -->
+    <header>
+      <div class="head-left">
+        <h1>Devaluing Human Intellect?<br><span class="q">AI Theorem Provers and<br>Mathematical Authority</span></h1>
+        <div class="subtitle">Verified <span class="neq">≠</span> Understood <span class="neq">≠</span> Accepted — What OpenAI's 2026 Proofs Reveal</div>
+        <p class="keymsg"><b>Key message:</b> AI hasn't made mathematicians obsolete — it has split <b>"proving"</b> from <b>"understanding"</b>, moving authority from human intelligibility to machine verifiability. <em style="color:#C7D6FA;">Machine-checked but not humanly grasped, credit disputed — where does authority lie?</em></p>
+      </div>
+      <div class="head-right">
+        <div class="corner-qr">
+          <img src="assets/qr.png" width="128" height="128" alt="QR code — scan for the full APA reference list, glossary and verified quotes" style="border-radius:10px;background:#fff;padding:6px;">
+          <span><b>scan</b> — full APA list &amp; links</span>
+        </div>
+        <div class="g">Group <b style="color:var(--cyan)">84-PG05</b> · AILT1001 · HKU
+          <small>Brian · Cyrus · Aleric · Miras</small>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= 3 COLUMNS ================= -->
+    <main>
+
+      <!-- ============ COLUMN 1 ============ -->
+      <section class="col">
+        <div class="colhead">
+          <div class="num">1</div>
+          <h2>What happened?<span class="sub">An autumn of AI proofs — 2024 to 2026</span></h2>
+        </div>
+
+        <div class="card">
+          <h3>The breakthrough timeline <span class="tag">· five milestones in six weeks</span></h3>
+          <div class="timeline">
+            <div class="titem"><span class="yr">JUN 2024</span><p><b>AlphaGeometry</b> solves Olympiad geometry without human demonstrations <span class="cite">(Trinh et al., 2024)</span>.</p></div>
+            <div class="titem"><span class="yr">2026</span><p><b>AlphaProof</b> reaches IMO-silver level, exploring proofs inside the Lean language <span class="cite">(Hubert et al., 2026)</span>.</p></div>
+            <div class="titem hot"><span class="yr">8 SEP 2026</span><p>OpenAI claims a <b>finite-time blow-up</b> for the forced 3D Navier–Stokes equations — Millennium-Prize-scale <span class="cite">(OpenAI, 2026a)</span>.</p></div>
+            <div class="titem"><span class="yr">6 OCT 2026</span><p>OpenAI releases results on the <b>quasi-Riemann hypothesis</b> <span class="cite">(OpenAI, 2026c; Quanta Magazine, 2026b)</span>.</p></div>
+            <div class="titem hot"><span class="yr">26 OCT 2026</span><p>One announcement, three landmarks: Kakeya-related analysis, a <b>disproof of ETH</b>, Yang–Mills existence results <span class="cite">(OpenAI, 2026b)</span>.</p></div>
+          </div>
+          <p class="sowhat">Each was expected to need decades. The compressed timeline itself is the story.</p>
+        </div>
+
+        <div class="card" style="flex:1">
+          <h3>Case A · Navier–Stokes <span class="tag">· the problem AI chose — and the one it left behind</span></h3>
+          <ul class="points">
+            <li><b>Claimed:</b> blow-up in the <i>forced</i> 3D Navier–Stokes equations — a US$1M Clay Millennium Problem. A 160-page write-up <b>plus</b> a Lean machine-check <span class="cite">(OpenAI, 2026a)</span>.</li>
+            <li><b>How:</b> one prompt → thousands of debating agents → Lean check. Industrialised search, not a "genius" step <span class="cite">(OpenAI, 2026a)</span>.</li>
+            <li><b>Groundbreaking:</b> the first Millennium-scale claim with machine verification — no longer dismissible as toys <span class="cite">(Quanta Magazine, 2026a)</span>.</li>
+            <li><b>The sting:</b> Clay <b>still lists it as open</b>; experts call it "a difficult read", its framing "meaningfully imprecise" <span class="cite">(Scientific American, 2026)</span>.</li>
+          </ul>
+          <div class="chips">
+            <div class="chip"><div class="big">~10,000</div><div class="lbl">AI agents in the swarm</div></div>
+            <div class="chip"><div class="big">88 hrs</div><div class="lbl">prompt → proof claim</div></div>
+            <div class="chip"><div class="big">130 B</div><div class="lbl">tokens of compute</div></div>
+            <div class="chip gold"><div class="big">still open</div><div class="lbl">Clay Institute status</div></div>
+          </div>
+          <svg class="flow" viewBox="0 0 800 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pipeline: prompt to swarm to writeup to Lean check to human scrutiny">
+            <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#8FB4FF"/></marker></defs>
+            <g font-family="Inter,Segoe UI,Arial" text-anchor="middle">
+              <rect x="8" y="10" width="240" height="64" rx="12" fill="rgba(255,255,255,.09)" stroke="rgba(160,190,255,.35)"/>
+              <text x="128" y="37" font-size="21" fill="#EDF3FF" font-weight="700">1 · Prompt</text>
+              <text x="128" y="60" font-size="15" fill="#AFC3EE">a single question</text>
+
+              <rect x="278" y="10" width="260" height="64" rx="12" fill="rgba(90,200,255,.13)" stroke="rgba(90,200,255,.5)"/>
+              <text x="408" y="37" font-size="21" fill="#EDF3FF" font-weight="700">2 · Agent swarm</text>
+              <text x="408" y="60" font-size="15" fill="#AFC3EE">search · debate · explore</text>
+
+              <rect x="568" y="10" width="224" height="64" rx="12" fill="rgba(255,255,255,.09)" stroke="rgba(160,190,255,.35)"/>
+              <text x="680" y="37" font-size="21" fill="#EDF3FF" font-weight="700">3 · Write-up</text>
+              <text x="680" y="60" font-size="15" fill="#AFC3EE">160 pages of maths</text>
+
+              <path d="M680 74 V 100 H 235 V 118" fill="none" stroke="#8FB4FF" stroke-width="2.5" marker-end="url(#ar)"/>
+
+              <rect x="85" y="120" width="300" height="64" rx="12" fill="rgba(183,156,255,.14)" stroke="rgba(183,156,255,.5)"/>
+              <text x="235" y="147" font-size="21" fill="#EDF3FF" font-weight="700">4 · Lean check</text>
+              <text x="235" y="170" font-size="15" fill="#AFC3EE">every step verified</text>
+
+              <rect x="430" y="120" width="300" height="64" rx="12" fill="rgba(255,200,87,.12)" stroke="rgba(255,200,87,.55)"/>
+              <text x="580" y="147" font-size="21" fill="#FFF3D6" font-weight="700">5 · Humans</text>
+              <text x="580" y="170" font-size="15" fill="#E8D9AE">scrutinise &amp; judge</text>
+
+              <line x1="387" y1="152" x2="426" y2="152" stroke="#8FB4FF" stroke-width="2.5" marker-end="url(#ar)"/>
+
+              <text x="400" y="205" font-size="16" fill="#8FA6D9" text-anchor="middle" font-style="italic">Verification infrastructure — not a rival "AI mathematician"</text>
+            </g>
+          </svg>
+
+          <!-- Case A figure — uploaded visualisation. To swap: change the src below. -->
+          <figure class="fig">
+            <img src="assets/vortex.webp" alt="Simulated vortex tubes showing an inward spiral and axial stretching — the blow-up dynamics behind the Navier–Stokes claim">
+            <figcaption>Vortex tubes — inward spiral &amp; axial stretching: the blow-up dynamics behind the claim</figcaption>
+          </figure>
+        </div>
+
+      </section>
+
+      <!-- ============ COLUMN 2 ============ -->
+      <section class="col colmid">
+        <div class="colhead">
+          <div class="num" style="background:linear-gradient(135deg,var(--amber),#FFE3A1)">2</div>
+          <h2>Why is it hard to trust?<span class="sub">Three words that decide everything</span></h2>
+        </div>
+
+        <div class="card" style="flex:1">
+          <h3>Verified ✓ ≠ Understood ✗ ≠ Accepted ✗</h3>
+          <table class="board">
+            <tr><th>Case study</th><th>Verified?</th><th>Understood?</th><th>Accepted?</th></tr>
+            <tr>
+              <td class="caselabel">Navier–Stokes<small>OpenAI · Sept 2026</small></td>
+              <td><span class="yes">✓</span><span class="cellsub">Lean checked every logical step (OpenAI, 2026a)</span></td>
+              <td><span class="no">✗</span><span class="cellsub">"the most horrendous [proof] I have ever read" — Buckmaster (Yahoo Tech, 2026)</span></td>
+              <td><span class="no">✗</span><span class="cellsub">Clay still lists the problem as open (Scientific American, 2026)</span></td>
+            </tr>
+            <tr>
+              <td class="caselabel">ETH<small>OpenAI · Oct 2026</small></td>
+              <td><span class="yes">✓</span><span class="cellsub">Lean-verified disproof, published openly (OpenAI, 2026b)</span></td>
+              <td><span class="no">✗</span><span class="cellsub">"two or three alien-looking parts" — R. Williams (Fernholz, 2026)</span></td>
+              <td><span class="no">✗</span><span class="cellsub">community examination has only just begun (OpenAI, 2026b)</span></td>
+            </tr>
+          </table>
+          <p class="punch">What convinced experts in <b>both</b> cases was not the writing — it was the <b>machine</b>. Authority is migrating from <b>"understood by humans"</b> to <b>"verified by machines"</b> <span class="cite">(Avigad, 2008)</span>.</p>
+        </div>
+
+        <div class="card" style="flex:1">
+          <h3>What do the human experts say?</h3>
+          <figure class="fig argue">
+            <img src="assets/arguing.jpg" alt="Illustration: a human mathematician and an AI robot arguing at a blackboard, the robot holding a printed formal proof">
+            <figcaption>Human intuition vs machine verification — the argument at the heart of the debate (AI-generated image)</figcaption>
+          </figure>
+          <div class="quotes">
+            <div class="qcard">
+              <p class="qq">The most horrendous [proof] I have ever read.</p>
+              <p class="qa">Tristan Buckmaster <span>· Princeton, on the Navier–Stokes write-up (Yahoo Tech, 2026)</span></p>
+            </div>
+            <div class="qcard">
+              <p class="qq">Two or three alien-looking parts… the whole community needs to work on together.</p>
+              <p class="qa">Ryan Williams <span>· MIT, on the ETH disproof (Fernholz, 2026)</span></p>
+            </div>
+            <div class="qcard">
+              <p class="qq">It's not anymore a matter of clearly verifiable mathematical facts.</p>
+              <p class="qa">Camillo De Lellis <span>· IAS (Scientific American, 2026)</span></p>
+            </div>
+            <div class="qcard">
+              <p class="qq">Technically, all the plot lines are resolved, but most of the value of the experience was lost.</p>
+              <p class="qa">Terence Tao <span>· UCLA — comparing a rushed proof to watching only a film's start and end (IBM Think, 2026)</span></p>
+            </div>
+            <div class="qcard wide">
+              <p class="qq">…he would be publicly scooped at any opportunity. Instead of contacting him to work with him, … the people at OpenAI chose to do this.</p>
+              <p class="qa">Levent Alpöge <span>· Anthropic, on OpenAI's Yang–Mills credit; hours later Anthropic released its own ETH refutation (X, via Fernholz, 2026)</span></p>
+            </div>
+          </div>
+          <p class="punch" style="margin-top:12px">Four of five voices are experts <b>engaging seriously</b> with AI output — neither dismissal nor surrender. That <b>is</b> the new normal.</p>
+        </div>
+
+        <div class="card">
+          <h3>Think critically — three questions for the next AI breakthrough</h3>
+          <div class="q3">
+            <div class="item"><div class="n">1</div><div><h4>Who framed the problem?</h4><p>Whoever chooses <i>which version</i> counts as "solved" holds real power. OpenAI chose the forced N–S case; the unforced case remains open <span class="cite">(OpenAI, 2026a; Scientific American, 2026)</span>.</p></div></div>
+            <div class="item"><div class="n">2</div><div><h4>Who gets credit?</h4><p>Priority disputes erupted within days in both cases: Buckmaster–Alpöge over prior work; then OpenAI vs Anthropic — two rival ETH refutations, same day <span class="cite">(Yahoo Tech, 2026; Fernholz, 2026)</span>.</p></div></div>
+            <div class="item"><div class="n">3</div><div><h4>Who checks the checkers?</h4><p>Lean can't judge whether the statement matches the real problem, nor decide priority — that stays human: shepherd groups, open letters, a funded conference <span class="cite">(OpenAI, 2026b; Fernholz, 2026)</span>.</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ COLUMN 3 ============ -->
+      <section class="col">
+        <div class="colhead">
+          <div class="num" style="background:linear-gradient(135deg,var(--violet),#D9C9FF)">3</div>
+          <h2>What now?<span class="sub">A second case — and what we take away</span></h2>
+        </div>
+
+        <div class="card" style="flex:1">
+          <h3>Case B · Exponential Time Hypothesis <span class="tag">· a 27-year-old cornerstone, refuted in days</span></h3>
+          <ul class="points">
+            <li><b>Claimed:</b> ETH (1999) says hard logic puzzles <i>provably</i> need exponential time — bedrock of hundreds of hardness results <span class="cite">(Impagliazzo &amp; Paturi, 2001)</span>. On 26 Oct 2026, OpenAI's system <b>proved ETH false</b> <span class="cite">(OpenAI, 2026b)</span>.</li>
+            <li><b>How:</b> a 66-page AI disproof; Lean checked it <b>the next day</b>; ETH's <i>own inventors</i> lead the examination <span class="cite">(OpenAI, 2026b)</span>.</li>
+            <li><b>Groundbreaking:</b> a decade-worthy result, unsolicited — Williams now puts "a little more weight on the plausibility of P = NP" <span class="cite">(Fernholz, 2026)</span>.</li>
+            <li><b>The Anthropic twist:</b> hours later, <b>Anthropic published its own ETH refutation, credited to Claude</b> — two rival AIs, two refutations, <i>neither accepted yet</i> <span class="cite">(Anthropic, 2026; Fernholz, 2026)</span>.</li>
+          </ul>
+          <div class="chips">
+            <div class="chip"><div class="big">1999</div><div class="lbl">ETH proposed</div></div>
+            <div class="chip"><div class="big">16 → 17 Oct</div><div class="lbl">AI proof → Lean check</div></div>
+            <div class="chip gold"><div class="big">× 2</div><div class="lbl">rival labs, same day</div></div>
+          </div>
+          <div class="guard"><b>Handle with care:</b> ETH false ≠ P vs NP solved. The algorithm is still astronomically slow at real sizes and breaks no cryptography — a <i>theoretical</i> earthquake, not an everyday one <span class="cite" style="color:#D8C68F">(Fernholz, 2026)</span>.</div>
+
+          <!-- Case B figure — Gemini-generated illustration (1024×1024). To swap: change the src below. -->
+          <figure class="fig">
+            <img src="assets/eth-anxiety.jpg" alt="Illustration: a shocked CS/Math student surrounded by monitors announcing 'LLM solves Navier–Stokes, ETH proven wrong', thinking 'Am I replaced?? — unemployment ahead?'">
+            <figcaption>Illustration — the headlines' real message to students: <i>"Am I replaced?"</i> That anxiety, not the maths, is this poster's subject (AI-generated image)</figcaption>
+          </figure>
+        </div>
+
+        <div class="card takeaway">
+          <h3>Takeaway <span class="tag">· complement, not replacement</span></h3>
+          <p class="lead">Authority is migrating, not disappearing: from "a proof you can read" to "a proof a machine can check — that a community still must accept."</p>
+          <ul class="points">
+            <li>Humans keep what matters most: <b>choosing problems, judging meaning, governing credit</b> <span class="cite">(OpenAI, 2026b)</span>.</li>
+            <li>AI can also <b>sharpen</b> intuition: AI-guided mathematicians found new knot-theory results <span class="cite">(Davies et al., 2021)</span>.</li>
+            <li><b>The skill to build:</b> not out-writing AI, but asking what AI cannot frame — <i>which problem matters, and what counts as understanding?</i></li>
+          </ul>
+          <svg class="balance" viewBox="0 0 800 235" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Machine verification and human meaning in balance">
+            <defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#8FB4FF"/></marker></defs>
+            <g font-family="Inter,Segoe UI,Arial" text-anchor="middle">
+              <circle cx="165" cy="100" r="62" fill="rgba(183,156,255,.15)" stroke="rgba(183,156,255,.6)" stroke-width="3"/>
+              <text x="165" y="94" font-size="21" fill="#EDF3FF" font-weight="700">Machine</text>
+              <text x="165" y="118" font-size="21" fill="#EDF3FF" font-weight="700">verification</text>
+              <circle cx="635" cy="100" r="62" fill="rgba(255,200,87,.13)" stroke="rgba(255,200,87,.6)" stroke-width="3"/>
+              <text x="635" y="94" font-size="21" fill="#FFF3D6" font-weight="700">Human</text>
+              <text x="635" y="118" font-size="21" fill="#FFF3D6" font-weight="700">meaning</text>
+              <line x1="240" y1="88" x2="560" y2="88" stroke="#8FB4FF" stroke-width="3" marker-end="url(#ar2)"/>
+              <line x1="560" y1="112" x2="240" y2="112" stroke="#8FB4FF" stroke-width="3" marker-end="url(#ar2)"/>
+              <text x="400" y="203" font-size="17" fill="#AFC3EE" font-style="italic">checks the steps ⇄ chooses problems · judges meaning · governs credit</text>
+              <text x="400" y="228" font-size="15" fill="#8FA6D9" font-style="italic">The baton passes — it is not dropped. (Concept after Davies et al., 2021)</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+    </main>
+
+    <div class="footnote">
+      <span>AILT1001 · AI Literacy I · Group Project Studio · Group 84-PG05 — A0 portrait poster</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+  // Preview-only: scale the fixed-size A0 canvas to fit the screen. Does not affect print/export.
+  function fit(){
+    const s = Math.min((innerWidth-24)/1682, (innerHeight-24)/2378);
+    document.getElementById('stage').style.transform = 'scale(' + s + ')';
+  }
+  addEventListener('resize', fit); fit();
+</script>
+</body>
+</html>
